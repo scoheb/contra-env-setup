@@ -123,6 +123,11 @@
   delay: 10
   when: build_success|bool == false
 
+- name: Fail if build failed
+  fail:
+    msg: "Build failed for {{  build_config_name_file.stdout }}"
+  when: build_success|bool == false
+
 # Check for failed apps and cleanup
 - name: Check for any failed app on the cluster
   shell: "{{ oc_bin }} get all | egrep 'Failed|Error' | egrep 'builds' | awk '{print $1}' | awk -F'/' '{print $2}' | sed 's/-[0-9+]//g' | head -1"
